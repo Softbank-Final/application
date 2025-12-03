@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { validateEmail } from '../../utils/validators';
-import LoadingSpinner from '../../components/common/LoadingSpinner'; // 로딩 컴포넌트 추가
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
-export default function LoginStep4_Final() {
+export default function Login() {
   const navigate = useNavigate();
-  const { login, isLoading } = useAuthStore(); // isLoading 상태 가져오기
+  const { login, isLoading } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // 비밀번호 표시 상태
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +68,6 @@ export default function LoginStep4_Final() {
               />
             </div>
 
-            {/* 비밀번호 토글 UI 구현 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
@@ -102,7 +101,6 @@ export default function LoginStep4_Final() {
               </Link>
             </div>
 
-            {/* 로딩 상태 처리 */}
             <button
               type="submit"
               disabled={isLoading}
