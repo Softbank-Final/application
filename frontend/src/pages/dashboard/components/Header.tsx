@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 
 // Header Component
-export default function HeaderStep3_Final() {
+export default function Header() {
     // Hooks & Store
     const navigate = useNavigate();
     const { logout, user } = useAuthStore(); // 인증 스토어에서 유저 정보와 로그아웃 함수 구독
