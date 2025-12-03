@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import type { User, AuthState } from '../types/auth';
+import { authApi } from '../services/authApi'; // API 서비스 임포트
 
 interface AuthStore extends AuthState {
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
-  // 비동기 액션들은 아직 인터페이스에만 정의하거나, 2단계에서 추가
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -14,9 +14,8 @@ interface AuthStore extends AuthState {
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: true, // 초기 로딩 상태
+  isLoading: true,
 
-  // 단순 상태 변경 (Synchronous Actions)
   setUser: (user) =>
     set({
       user,
@@ -26,9 +25,51 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   setLoading: (isLoading) => set({ isLoading }),
 
-  // 1단계에서는 비동기 로직의 껍데기만 생성 (Placeholder)
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
-  checkAuth: async () => {},
+  // 로그인 로직 구현
+  login: async (email, password) => {
+    set({ isLoading: true });
+    try {
+      const response = await authApi.login({ email, password });
+      set({
+        user: response.user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
+  // 회원가입 로직 구현
+  register: async (email, password, name) => {
+    set({ isLoading: true });
+    try {
+      const response = await authApi.register({ email, password, name });
+      set({
+        user: response.user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
+  // 로그아웃 로직 구현
+  logout: async () => {
+    try {
+      await authApi.logout();
+    } finally {
+      // API 성공 여부와 관계없이 클라이언트 상태 초기화
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
+    }
+  },
+
+  checkAuth: async () => {}, // TODO: 아직 구현 안함
 }));
