@@ -473,6 +473,58 @@ return (
               </div>
             </div>
           )}
+
+          
+                {/* Function Info */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">함수 정보</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between py-2 border-b border-purple-100">
+                        <span className="text-sm text-gray-600">언어</span>
+                        <span className="text-sm font-medium text-gray-900">{functionData.language}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-purple-100">
+                        <span className="text-sm text-gray-600">런타임</span>
+                        <span className="text-sm font-medium text-gray-900">{functionData.runtime}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-purple-100">
+                        <span className="text-sm text-gray-600">메모리</span>
+                        <span className="text-sm font-medium text-gray-900">{functionData.memory} MB</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-purple-100">
+                        <span className="text-sm text-gray-600">타임아웃</span>
+                        <span className="text-sm font-medium text-gray-900">{functionData.timeout}초</span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-sm text-gray-600">마지막 배포</span>
+                        <span className="text-sm font-medium text-gray-900">{functionData.lastDeployed}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">엔드포인트</h3>
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 mb-4 border border-purple-100">
+                      <div className="flex items-center justify-between">
+                        <code className="text-sm text-gray-700 break-all">{functionData.endpoint}</code>
+                        <button className="ml-3 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white transition-colors cursor-pointer flex-shrink-0">
+                          <i className="ri-file-copy-line text-gray-600"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="text-sm text-gray-600">요청 예시:</div>
+                      <div className="bg-gray-900 rounded-xl p-4 font-mono text-xs text-gray-100">
+                        <div className="text-purple-400">curl</div>
+                        <div className="text-gray-300 ml-2">-X POST \</div>
+                        <div className="text-gray-300 ml-2">{functionData.endpoint} \</div>
+                        <div className="text-gray-300 ml-2">-H "Content-Type: application/json" \</div>
+                        <div className="text-gray-300 ml-2">-d '{"{\"key\": \"value\"}"}'</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
         </div>
       </main>
     </div>
