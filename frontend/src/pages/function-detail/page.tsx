@@ -299,4 +299,84 @@ export default function FunctionDetailPage() {
     setIsTestRunning(false);
   };
 
+    // Auto-Tuner 분석 로직
+  const getAutoTunerAnalysis = () => {
+    if (!testResult) return null;
+
+    const memoryUsagePercent = (testResult.memoryUsed / testResult.memoryAllocated) * 100;
+    const cpuUsage = testResult.cpuUsage;
+    const hasNetworkActivity = testResult.networkRx > 0 || testResult.networkTx > 0;
+    const hasDiskActivity = testResult.diskRead > 0 || testResult.diskWrite > 0;
+
+    let diagnosis = {
+      status: 'optimal' as 'optimal' | 'warning' | 'critical',
+      title: '',
+      message: '',
+      recommendation: '',
+      savings: 0,
+      insight: ''
+    };
+
+    // 진단 로직
+    if (memoryUsagePercent < 30 && cpuUsage > 60) {
+      diagnosis = {
+        status: 'warning',
+        title: '비효율 감지 (Inefficient)',
+        message: '메모리가 과하게 할당되었습니다.',
+        recommendation: `512MB → 128MB로 변경 시 월 $3.50 절약 예상`,
+        savings: 50,
+        insight: '💡 메모리 다이어트 가능! CPU 위주의 작업입니다. 메모리를 줄여 비용을 아끼세요.'
+      };
+    } else if (cpuUsage < 20 && testResult.executionTime > 100) {
+      diagnosis = {
+        status: 'warning',
+        title: '주의 (Warning)',
+        message: 'I/O 병목이 감지되었습니다.',
+        recommendation: '외부 API 응답 최적화 권장',
+        savings: 0,
+        insight: '🐢 I/O 병목 감지. 외부 API 응답을 기다리느라 시간이 오래 걸리고 있습니다.'
+      };
+    } else if (hasNetworkActivity && cpuUsage > 60) {
+      diagnosis = {
+        status: 'optimal',
+        title: '최적 (Optimal)',
+        message: '리소스 설정이 적절합니다.',
+        recommendation: '현재 설정 유지',
+        savings: 0,
+        insight: '🚀 데이터 처리 중. 대용량 데이터를 내려받아 처리하는 작업으로 보입니다.'
+      };
+    } else if (cpuUsage < 10 && memoryUsagePercent < 10) {
+      diagnosis = {
+        status: 'critical',
+        title: '위험 (Critical)',
+        message: '리소스 사용량이 비정상적으로 낮습니다.',
+        recommendation: '코드 로직 확인 필요',
+        savings: 0,
+        insight: '👻 좀비 프로세스? 리소스 사용량이 거의 없습니다. 코드 로직을 확인해보세요.'
+      };
+    } else if (memoryUsagePercent > 80) {
+      diagnosis = {
+        status: 'critical',
+        title: '위험 (Critical)',
+        message: '메모리 부족 위험이 있습니다.',
+        recommendation: '512MB → 1024MB로 증설 권장',
+        savings: 0,
+        insight: '⚠️ 메모리 부족! 성능 저하를 방지하려면 메모리를 늘리세요.'
+      };
+    } else {
+      diagnosis = {
+        status: 'optimal',
+        title: '최적 (Optimal)',
+        message: '리소스 설정이 완벽합니다.',
+        recommendation: '현재 설정 유지',
+        savings: 0,
+        insight: '✨ 완벽한 균형! 현재 리소스 설정이 최적화되어 있습니다.'
+      };
+    }
+
+    return diagnosis;
+  };
+
+  const analysis = testResult ? getAutoTunerAnalysis() : null;
+
 }
