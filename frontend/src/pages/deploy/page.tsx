@@ -340,6 +340,107 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Deployment Progress Modal */}
+                        {showDeploymentModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
+                                    <div className="text-center mb-8">
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">⚡ Function Deployment</h3>
+                                        <p className="text-gray-600">함수 배포 중...</p>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        {deploymentSteps.map((step, index) => (
+                                            <div
+                                                key={index}
+                                                className={`relative border-2 rounded-xl p-5 transition-all duration-500 ${deploymentStep > index
+                                                        ? 'border-green-400 bg-green-50'
+                                                        : deploymentStep === index
+                                                            ? `border-transparent bg-gradient-to-r ${step.color} shadow-lg`
+                                                            : 'border-gray-200 bg-gray-50 opacity-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-start gap-4">
+                                                    <div
+                                                        className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${deploymentStep > index
+                                                                ? 'bg-green-500'
+                                                                : deploymentStep === index
+                                                                    ? 'bg-white'
+                                                                    : 'bg-gray-300'
+                                                            }`}
+                                                    >
+                                                        {deploymentStep > index ? (
+                                                            <i className="ri-check-line text-2xl text-white"></i>
+                                                        ) : (
+                                                            <i
+                                                                className={`${step.icon} text-2xl ${deploymentStep === index ? 'text-gray-900' : 'text-gray-500'
+                                                                    }`}
+                                                            ></i>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="flex-1">
+                                                        <h4
+                                                            className={`text-lg font-bold mb-1 ${deploymentStep >= index ? 'text-gray-900' : 'text-gray-500'
+                                                                }`}
+                                                        >
+                                                            {step.title}
+                                                        </h4>
+                                                        <p
+                                                            className={`text-sm mb-2 ${deploymentStep >= index ? 'text-gray-700' : 'text-gray-400'
+                                                                }`}
+                                                        >
+                                                            {step.description}
+                                                        </p>
+                                                        {deploymentStep === index && (
+                                                            <div className="mt-3">
+                                                                <div className="text-xs font-mono text-gray-600 mb-2">{step.detail}</div>
+                                                                {index < 3 && (
+                                                                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                                                        <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full animate-progress"></div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                        {step.highlight && deploymentStep === index && (
+                                                            <div className="mt-3 bg-white/90 rounded-lg p-3 border border-orange-200">
+                                                                <div className="flex items-center gap-2 text-sm font-semibold text-orange-900">
+                                                                    <i className="ri-star-fill text-orange-500"></i>
+                                                                    <span>핵심 기능: Cold Start 제거</span>
+                                                                </div>
+                                                                <p className="text-xs text-orange-800 mt-1">
+                                                                    Worker Node와 통신하여 컨테이너를 미리 준비합니다.
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {deploymentStep > index && (
+                                                        <div className="flex-shrink-0">
+                                                            <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                                                                완료
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {deploymentStep === 4 && (
+                                        <div className="mt-6 text-center">
+                                            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-400 rounded-xl px-6 py-3">
+                                                <i className="ri-shield-check-line text-2xl text-green-600"></i>
+                                                <span className="font-bold text-green-900">
+                                                    NanoGrid Warm Pool에 의해 보호되고 있습니다
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
