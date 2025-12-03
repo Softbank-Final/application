@@ -5,7 +5,7 @@ import { validateEmail, validatePassword } from '../../utils/validators';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 // Register Component
-export default function RegisterStep4_Final() {
+export default function Register() {
     // Hooks & Store
     const navigate = useNavigate();
     const { register, isLoading } = useAuthStore(); // 로그인/회원가입 액션 및 로딩 상태
