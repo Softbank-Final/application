@@ -1,7 +1,50 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { validateEmail, validatePassword } from '../../utils/validators'; // 검증 함수 임포트
 
 // 회원가입 페이지 UI 레이아웃
-export default function RegisterStep1() {
+export default function Register() {
+    // 폼 데이터 상태 객체로 관리
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    // 유효성 검사 로직
+    if (formData.name.length < 2) {
+      setError('Name must be at least 2 characters');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // 비밀번호 복잡도 검사
+    const passwordValidation = validatePassword(formData.password);
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.errors[0]); // 첫 번째 에러 메시지 표시
+      return;
+    }
+
+    // 비밀번호 일치 검사
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // TODO: API 호출
+    console.log('Registering:', formData);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
