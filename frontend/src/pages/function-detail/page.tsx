@@ -600,6 +600,193 @@ return (
                   </div>
                 </div>
               </div>
+
+              
+            {/* Metrics Tab */}
+            {activeTab === 'metrics' && (
+              <div className="space-y-6">
+                {/* Time Range Selector */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setSelectedTimeRange('1h')}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
+                          selectedTimeRange === '1h'
+                            ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white'
+                            : 'bg-white border border-purple-200 text-gray-700 hover:bg-purple-50'
+                        }`}
+                      >
+                        1시간
+                      </button>
+                      <button
+                        onClick={() => setSelectedTimeRange('24h')}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
+                          selectedTimeRange === '24h'
+                            ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white'
+                            : 'bg-white border border-purple-200 text-gray-700 hover:bg-purple-50'
+                        }`}
+                      >
+                        24시간
+                      </button>
+                      <button
+                        onClick={() => setSelectedTimeRange('7d')}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
+                          selectedTimeRange === '7d'
+                            ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white'
+                            : 'bg-white border border-purple-200 text-gray-700 hover:bg-purple-50'
+                        }`}
+                      >
+                        7일
+                      </button>
+                      <button
+                        onClick={() => setSelectedTimeRange('30d')}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
+                          selectedTimeRange === '30d'
+                            ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white'
+                            : 'bg-white border border-purple-200 text-gray-700 hover:bg-purple-50'
+                        }`}
+                      >
+                        30일
+                      </button>
+                    </div>
+                    <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-purple-200 hover:bg-purple-50 transition-all cursor-pointer">
+                      <i className="ri-refresh-line text-gray-600"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Performance Metrics */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-gray-900">실행 횟수</h3>
+                      <i className="ri-bar-chart-line text-2xl text-purple-600"></i>
+                    </div>
+                    <div className="h-64 flex items-end justify-between gap-2">
+                      {[120, 145, 98, 167, 189, 156, 201, 178, 145, 167, 189, 201].map((value, idx) => (
+                        <div key={idx} className="flex-1 flex flex-col items-center gap-2">
+                          <div
+                            className="w-full bg-gradient-to-t from-purple-400 to-pink-400 rounded-t-lg transition-all hover:opacity-80"
+                            style={{ height: `${(value / 201) * 100}%` }}
+                          ></div>
+                          <span className="text-xs text-gray-500">{idx + 1}h</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-gray-900">응답 시간</h3>
+                      <i className="ri-time-line text-2xl text-purple-600"></i>
+                    </div>
+                    <div className="h-64 flex items-end justify-between gap-2">
+                      {[42, 38, 51, 45, 39, 47, 43, 41, 46, 44, 40, 45].map((value, idx) => (
+                        <div key={idx} className="flex-1 flex flex-col items-center gap-2">
+                          <div
+                            className="w-full bg-gradient-to-t from-blue-400 to-cyan-400 rounded-t-lg transition-all hover:opacity-80"
+                            style={{ height: `${(value / 51) * 100}%` }}
+                          ></div>
+                          <span className="text-xs text-gray-500">{idx + 1}h</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Detailed Stats */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+                        <i className="ri-check-line text-2xl text-green-600"></i>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">성공률</div>
+                        <div className="text-2xl font-bold text-gray-900">99.76%</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">성공</span>
+                        <span className="font-medium text-green-600">1,244</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">실패</span>
+                        <span className="font-medium text-red-600">3</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center">
+                        <i className="ri-database-2-line text-2xl text-orange-600"></i>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">평균 메모리</div>
+                        <div className="text-2xl font-bold text-gray-900">492 MB</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">최대</span>
+                        <span className="font-medium text-gray-900">501 MB</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">최소</span>
+                        <span className="font-medium text-gray-900">485 MB</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
+                        <i className="ri-flashlight-line text-2xl text-purple-600"></i>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">Cold Start</div>
+                        <div className="text-2xl font-bold text-gray-900">0 ms</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Warm Pool</span>
+                        <span className="font-medium text-green-600">활성</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">대기 인스턴스</span>
+                        <span className="font-medium text-gray-900">3개</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cost Analysis */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">비용 분석</h3>
+                  <div className="grid md:grid-cols-4 gap-4">
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                      <div className="text-sm text-gray-600 mb-1">이번 달</div>
+                      <div className="text-2xl font-bold text-gray-900">$24.50</div>
+                    </div>
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                      <div className="text-sm text-gray-600 mb-1">지난 달</div>
+                      <div className="text-2xl font-bold text-gray-900">$28.90</div>
+                    </div>
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                      <div className="text-sm text-gray-600 mb-1">절감액</div>
+                      <div className="text-2xl font-bold text-green-600">$4.40</div>
+                    </div>
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                      <div className="text-sm text-gray-600 mb-1">절감률</div>
+                      <div className="text-2xl font-bold text-green-600">15.2%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
       </main>
     </div>
