@@ -379,4 +379,58 @@ export default function FunctionDetailPage() {
 
   const analysis = testResult ? getAutoTunerAnalysis() : null;
 
+    return (
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            {/* Function Header */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 mb-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => navigate('/dashboard')}
+                    className="w-10 h-10 flex items-center justify-center bg-purple-50 border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-100 transition-all cursor-pointer"
+                  >
+                    <i className="ri-arrow-left-line text-lg"></i>
+                  </button>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">{id}</h1>
+                    <p className="text-sm text-gray-600 mt-1">함수 상세 정보 및 실행 관리</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setShowTestModal(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2"
+                  >
+                    <i className="ri-play-circle-line"></i>
+                    테스트 실행
+                  </button>
+                  <button 
+                    onClick={() => navigate('/deploy', { 
+                      state: { 
+                        redeployData: {
+                          name: id,
+                        }
+                      } 
+                    })}
+                    className="px-4 py-2 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2"
+                  >
+                    <i className="ri-upload-cloud-line"></i>
+                    재배포
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+
 }
