@@ -75,6 +75,34 @@ export default function Dashboard() {
     }
   ]);
 
+    const getLanguageIcon = (language: string) => {
+    const icons: Record<string, string> = {
+      'Python': 'ri-python-line',
+      'Node.js': 'ri-nodejs-line',
+      'C++': 'ri-terminal-box-line',
+      'Go': 'ri-code-s-slash-line'
+    };
+    return icons[language] || 'ri-code-line';
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      'active': 'bg-green-50 text-green-600 border-green-200',
+      'inactive': 'bg-gray-50 text-gray-600 border-gray-200',
+      'deploying': 'bg-blue-50 text-blue-600 border-blue-200'
+    };
+    return colors[status] || 'bg-gray-50 text-gray-600';
+  };
+
+  const getStatusText = (status: string) => {
+    const texts: Record<string, string> = {
+      'active': '실행 중',
+      'inactive': '중지됨',
+      'deploying': '배포 중'
+    };
+    return texts[status] || status;
+  };
+
   return (
     <div className="flex h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       {/* 사이드바는 좌측에 고정 */}
