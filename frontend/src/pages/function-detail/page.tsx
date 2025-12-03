@@ -194,4 +194,29 @@ export default function FunctionDetailPage() {
       requestId: 'req-abc104'
     }
   ];
+
+    const tabs = [
+    { id: 'overview', label: '개요', icon: 'ri-dashboard-line' },
+    { id: 'metrics', label: '메트릭', icon: 'ri-line-chart-line' },
+    { id: 'logs', label: '로그', icon: 'ri-file-list-3-line' },
+    { id: 'settings', label: '설정', icon: 'ri-settings-3-line' }
+  ];
+
+  const getLevelColor = (level: string) => {
+    const colors: Record<string, string> = {
+      'info': 'bg-blue-50 text-blue-600 border-blue-200',
+      'warn': 'bg-yellow-50 text-yellow-600 border-yellow-200',
+      'error': 'bg-red-50 text-red-600 border-red-200'
+    };
+    return colors[level] || 'bg-gray-50 text-gray-600';
+  };
+
+  const getLevelIcon = (level: string) => {
+    const icons: Record<string, string> = {
+      'info': 'ri-information-line',
+      'warn': 'ri-alert-line',
+      'error': 'ri-error-warning-line'
+    };
+    return icons[level] || 'ri-information-line';
+  };
 }
