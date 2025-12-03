@@ -525,6 +525,42 @@ return (
                     </div>
                   </div>
                 </div>
+
+                
+                {/* Auto-Tuner Recommendation */}
+                <div className="bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <i className="ri-magic-line text-2xl"></i>
+                        <h3 className="text-xl font-bold">Auto-Tuner 추천</h3>
+                      </div>
+                      <p className="text-white/90 mb-4">
+                        실행 데이터를 분석한 결과, 메모리를 256MB로 조정하면 비용을 <strong>약 50%</strong> 절감할 수 있습니다.
+                      </p>
+                      <div className="flex items-center gap-4">
+                        <button 
+                          onClick={() => setShowOptimizationToast(true)}
+                          className="px-6 py-2.5 bg-white text-purple-600 font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer"
+                        >
+                          추천 적용하기
+                        </button>
+                        <button 
+                          onClick={() => setShowTestModal(true)}
+                          className="px-6 py-2.5 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all whitespace-nowrap cursor-pointer border border-white/30"
+                        >
+                          자세히 보기
+                        </button>
+                      </div>
+                    </div>
+                    <div className="ml-6 bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold mb-1">50%</div>
+                        <div className="text-sm text-white/90">예상 절감</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
         </div>
       </main>
     </div>
