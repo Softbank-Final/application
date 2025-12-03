@@ -539,6 +539,117 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Failure Modal */}
+                        {showFailureModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative animate-scale-in">
+                                    <div className="text-center">
+                                        <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                            <i className="ri-error-warning-line text-4xl text-white"></i>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">배포 실패</h3>
+                                        <p className="text-gray-600 mb-6">
+                                            배포 과정 중 오류가 발생했습니다.
+                                        </p>
+
+                                        {/* Failed Step Info */}
+                                        <div className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-5 mb-6 text-left">
+                                            <div className="flex items-start gap-3 mb-4">
+                                                <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <i className={`${deploymentSteps[failureInfo.step].icon} text-xl text-white`}></i>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-bold text-red-900 mb-1">
+                                                        {deploymentSteps[failureInfo.step].title}
+                                                    </h4>
+                                                    <p className="text-sm text-red-800">
+                                                        {deploymentSteps[failureInfo.step].description}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white/80 rounded-lg p-4 border border-red-200">
+                                                <div className="flex items-start gap-2 mb-2">
+                                                    <i className="ri-close-circle-line text-red-600 text-lg flex-shrink-0 mt-0.5"></i>
+                                                    <div>
+                                                        <div className="font-semibold text-red-900 text-sm mb-1">오류 메시지</div>
+                                                        <div className="text-sm text-red-800">{failureInfo.message}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="mt-3 pt-3 border-t border-red-200">
+                                                    <div className="text-xs font-mono text-red-700 break-all">
+                                                        {failureInfo.detail}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Troubleshooting Tips */}
+                                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6 text-left">
+                                            <div className="flex items-start gap-3">
+                                                <i className="ri-lightbulb-line text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                                <div>
+                                                    <h4 className="text-sm font-semibold text-blue-900 mb-2">해결 방법</h4>
+                                                    <ul className="text-sm text-blue-800 space-y-1">
+                                                        {failureInfo.step === 0 && (
+                                                            <>
+                                                                <li>• 코드 파일 크기를 확인해주세요 (최대 50MB)</li>
+                                                                <li>• 네트워크 연결 상태를 확인해주세요</li>
+                                                                <li>• 잠시 후 다시 시도해주세요</li>
+                                                            </>
+                                                        )}
+                                                        {failureInfo.step === 1 && (
+                                                            <>
+                                                                <li>• 함수명이 중복되지 않았는지 확인해주세요</li>
+                                                                <li>• 설정값이 올바른지 확인해주세요</li>
+                                                                <li>• 계정 권한을 확인해주세요</li>
+                                                            </>
+                                                        )}
+                                                        {failureInfo.step === 2 && (
+                                                            <>
+                                                                <li>• Worker Node 상태를 확인 중입니다</li>
+                                                                <li>• 런타임 환경을 다시 선택해주세요</li>
+                                                                <li>• 시스템 관리자에게 문의해주세요</li>
+                                                            </>
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="flex flex-col gap-3">
+                                            <button
+                                                onClick={handleRetryDeploy}
+                                                className="w-full px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center justify-center gap-2"
+                                            >
+                                                <i className="ri-refresh-line text-xl"></i>
+                                                다시 시도
+                                            </button>
+                                            <button
+                                                onClick={handleCancelDeploy}
+                                                className="w-full px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all whitespace-nowrap cursor-pointer"
+                                            >
+                                                취소
+                                            </button>
+                                        </div>
+
+                                        {/* Support Link */}
+                                        <div className="mt-6 pt-6 border-t border-gray-200">
+                                            <p className="text-sm text-gray-600">
+                                                문제가 계속되면{' '}
+                                                <a href="#" className="text-purple-600 font-semibold hover:underline">
+                                                    고객 지원팀
+                                                </a>
+                                                에 문의하세요
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
