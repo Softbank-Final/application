@@ -1081,7 +1081,355 @@ return (
                 </div>
               </div>
             )}
+
+            
+      {/* Test Run Modal - 버전 37 스타일 */}
+      {showTestModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-purple-400 to-pink-400 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <i className="ri-flask-line text-2xl text-white"></i>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">함수 테스트</h3>
+                  <p className="text-sm text-white/80">{functionData.name}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowTestModal(false);
+                  setTestResult(null);
+                  setActiveTestTab('input');
+                }}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
+              >
+                <i className="ri-close-line text-2xl text-white"></i>
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200 bg-gray-50 px-6">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setActiveTestTab('input')}
+                  className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${
+                    activeTestTab === 'input'
+                      ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <i className="ri-code-line mr-2"></i>
+                  입력
+                </button>
+                <button
+                  onClick={() => setActiveTestTab('result')}
+                  className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${
+                    activeTestTab === 'result'
+                      ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <i className="ri-terminal-line mr-2"></i>
+                  결과
+                </button>
+                <button
+                  onClick={() => setActiveTestTab('advanced')}
+                  className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${
+                    activeTestTab === 'advanced'
+                      ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <i className="ri-bar-chart-line mr-2"></i>
+                  상세 분석 (Advanced)
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {/* Input Tab */}
+              {activeTestTab === 'input' && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    테스트 입력 데이터 (JSON)
+                  </label>
+                  <textarea
+                    value={testInput}
+                    onChange={(e) => setTestInput(e.target.value)}
+                    className="w-full h-96 p-4 bg-gray-900 text-gray-100 font-mono text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                    style={{ fontFamily: 'Monaco, Consolas, monospace' }}
+                  />
+                  <div className="mt-4 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                    <div className="flex items-start gap-3">
+                      <i className="ri-information-line text-blue-600 text-lg flex-shrink-0 mt-0.5"></i>
+                      <div>
+                        <h4 className="text-sm font-semibold text-blue-900 mb-1">입력 형식 안내</h4>
+                        <p className="text-sm text-blue-800">
+                          JSON 형식으로 테스트 데이터를 입력하세요. 함수의 event 매개변수로 전달됩니다.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Result Tab */}
+              {activeTestTab === 'result' && (
+                <div>
+                  {isTestRunning ? (
+                    <div className="flex flex-col items-center justify-center py-12">
+                      <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                      <p className="text-gray-600 font-medium">함수 실행 중...</p>
+                    </div>
+                  ) : testResult ? (
+                    <div className="space-y-4">
+                      {/* Status */}
+                      <div className={`rounded-xl p-4 border-2 ${
+                        testResult.success 
+                          ? 'bg-green-50 border-green-300' 
+                          : 'bg-red-50 border-red-300'
+                      }`}>
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                            testResult.success ? 'bg-green-500' : 'bg-red-500'
+                          }`}>
+                            <i className={`${
+                              testResult.success ? 'ri-check-line' : 'ri-close-line'
+                            } text-2xl text-white`}></i>
+                          </div>
+                          <div>
+                            <div className="font-bold text-gray-900">
+                              {testResult.success ? '✅ 실행 성공' : '❌ 실행 실패'}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              Status Code: {testResult.statusCode}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Metrics */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                          <div className="text-sm text-gray-600 mb-1">응답 시간</div>
+                          <div className="text-2xl font-bold text-purple-600">{testResult.responseTime}ms</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                          <div className="text-sm text-gray-600 mb-1">메모리 사용</div>
+                          <div className="text-2xl font-bold text-blue-600">{testResult.memoryUsed}MB</div>
+                        </div>
+                      </div>
+
+                      {/* Output */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="block text-sm font-semibold text-gray-700">
+                            출력 결과
+                          </label>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(testResult.output);
+                            }}
+                            className="px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-1"
+                          >
+                            <i className="ri-file-copy-line"></i>
+                            복사
+                          </button>
+                        </div>
+                        <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-100 overflow-x-auto max-h-64">
+                          <pre>{testResult.output}</pre>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                      <i className="ri-play-circle-line text-6xl mb-4"></i>
+                      <p>테스트를 실행하려면 아래 버튼을 클릭하세요</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Advanced Tab */}
+              {activeTestTab === 'advanced' && (
+                <div>
+                  {testResult && analysis ? (
+                    <div className="space-y-6">
+                      {/* Auto-Tuner Header */}
+                      <div className={`rounded-xl p-6 text-white ${
+                        analysis.status === 'optimal' 
+                          ? 'bg-gradient-to-r from-green-400 to-emerald-400'
+                          : analysis.status === 'warning'
+                          ? 'bg-gradient-to-r from-yellow-400 to-orange-400'
+                          : 'bg-gradient-to-r from-red-400 to-pink-400'
+                      }`}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <i className="ri-fire-fill text-3xl"></i>
+                          <h3 className="text-2xl font-bold">Auto-Tuner 진단</h3>
+                        </div>
+                        <div className="text-xl font-bold mb-2">{analysis.title}</div>
+                        <p className="text-white/90 mb-3">{analysis.message}</p>
+                        <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+                          <div className="text-sm font-semibold mb-1">추천 사항</div>
+                          <div className="text-white/90">{analysis.recommendation}</div>
+                        </div>
+                      </div>
+
+                      {/* Insight */}
+                      <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-5">
+                        <div className="flex items-start gap-3">
+                          <i className="ri-lightbulb-line text-purple-600 text-2xl flex-shrink-0 mt-0.5"></i>
+                          <div>
+                            <h4 className="text-lg font-bold text-purple-900 mb-2">지능형 인사이트</h4>
+                            <p className="text-purple-800 text-lg">{analysis.insight}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Resource DNA */}
+                      <div>
+                        <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                          <i className="ri-dna-line text-purple-600"></i>
+                          리소스 DNA 분석
+                        </h4>
+                        <div className="space-y-4">
+                          {[
+                            { 
+                              label: 'Memory', 
+                              value: (testResult.memoryUsed / testResult.memoryAllocated) * 100, 
+                              color: 'purple',
+                              icon: 'ri-database-2-line',
+                              detail: `${testResult.memoryUsed}MB / ${testResult.memoryAllocated}MB`
+                            },
+                            { 
+                              label: 'CPU', 
+                              value: testResult.cpuUsage, 
+                              color: 'blue',
+                              icon: 'ri-cpu-line',
+                              detail: `${testResult.cpuUsage}% 사용`
+                            },
+                            { 
+                              label: 'Network I/O', 
+                              value: Math.min((testResult.networkRx + testResult.networkTx) / 2, 100), 
+                              color: 'green',
+                              icon: 'ri-global-line',
+                              detail: `↓${testResult.networkRx}KB ↑${testResult.networkTx}KB`
+                            },
+                            { 
+                              label: 'Disk I/O', 
+                              value: Math.min((testResult.diskRead + testResult.diskWrite) / 2, 100), 
+                              color: 'orange',
+                              icon: 'ri-hard-drive-line',
+                              detail: `Read ${testResult.diskRead}KB / Write ${testResult.diskWrite}KB`
+                            }
+                          ].map((metric) => (
+                            <div key={metric.label} className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:border-purple-300 transition-all">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-10 h-10 bg-gradient-to-br from-${metric.color}-100 to-${metric.color}-200 rounded-lg flex items-center justify-center`}>
+                                    <i className={`${metric.icon} text-${metric.color}-600 text-xl`}></i>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-gray-900">{metric.label}</div>
+                                    <div className="text-xs text-gray-500">{metric.detail}</div>
+                                  </div>
+                                </div>
+                                <span className="text-lg font-bold text-gray-900">{Math.round(metric.value)}%</span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                <div
+                                  className={`bg-gradient-to-r from-${metric.color}-400 to-${metric.color}-600 h-3 rounded-full transition-all duration-500`}
+                                  style={{ width: `${metric.value}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Apply Optimization */}
+                      {analysis.savings > 0 && (
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-5">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="text-lg font-bold text-green-900 mb-2">💰 비용 절감 기회</h4>
+                              <p className="text-green-800 mb-3">
+                                Auto-Tuner가 분석한 최적값을 적용하면 <strong>월 ${(analysis.savings * 0.07).toFixed(2)}</strong>를 절약할 수 있습니다.
+                              </p>
+                              <button
+                                onClick={() => {
+                                  setShowOptimizationToast(true);
+                                  setTimeout(() => setShowOptimizationToast(false), 3000);
+                                }}
+                                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2"
+                              >
+                                <i className="ri-magic-line text-xl"></i>
+                                최적값 자동 적용
+                              </button>
+                            </div>
+                            <div className="ml-6 text-center">
+                              <div className="text-4xl font-black text-green-600 mb-1">{analysis.savings}%</div>
+                              <div className="text-sm text-green-700 font-semibold">예상 절감</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                      <i className="ri-bar-chart-line text-6xl mb-4"></i>
+                      <p>테스트를 먼저 실행해주세요</p>
+                    </div>
+                  )}
+
+                  
+                </div>
+              )}
+
+              
+            {/* Modal Footer */}
+            <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={() => {
+                    setShowTestModal(false);
+                    setTestResult(null);
+                    setActiveTestTab('input');
+                  }}
+                  className="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all whitespace-nowrap cursor-pointer"
+                >
+                  닫기
+                </button>
+                <button
+                  onClick={handleTestRun}
+                  disabled={isTestRunning}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i className="ri-play-line"></i>
+                  {isTestRunning ? '실행 중...' : '테스트 실행'}
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* Optimization Toast */}
+      {showOptimizationToast && (
+        <div className="fixed bottom-6 right-6 bg-white rounded-xl shadow-2xl border border-purple-200 p-4 flex items-center gap-3 z-50 animate-slide-up">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-400 rounded-lg flex items-center justify-center">
+            <i className="ri-check-line text-xl text-white"></i>
+          </div>
+          <div>
+            <div className="font-bold text-gray-900">최적값이 적용되었습니다</div>
+            <div className="text-sm text-gray-600">다음 배포 설정에 저장되었습니다</div>
+          </div>
+        </div>
+      )}
         </main>
       </div>
     </div>
