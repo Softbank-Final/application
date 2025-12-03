@@ -899,6 +899,292 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Test Modal */}
+                        {showTestModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+                                    {/* Modal Header */}
+                                    <div className="bg-gradient-to-r from-purple-400 to-pink-400 px-6 py-4 flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                                <i className="ri-flask-line text-2xl text-white"></i>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white">함수 테스트</h3>
+                                                <p className="text-sm text-white/80">{formData.name}</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                setShowTestModal(false);
+                                                setTestResult(null);
+                                                setActiveTestTab('input');
+                                            }}
+                                            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
+                                        >
+                                            <i className="ri-close-line text-2xl text-white"></i>
+                                        </button>
+                                    </div>
+
+                                    {/* Tabs */}
+                                    <div className="border-b border-gray-200 bg-gray-50 px-6">
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={() => setActiveTestTab('input')}
+                                                className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'input'
+                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    }`}
+                                            >
+                                                <i className="ri-code-line mr-2"></i>
+                                                입력 데이터
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTestTab('result')}
+                                                className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'result'
+                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    }`}
+                                            >
+                                                <i className="ri-terminal-line mr-2"></i>
+                                                실행 결과
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTestTab('analysis')}
+                                                className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'analysis'
+                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    }`}
+                                            >
+                                                <i className="ri-bar-chart-line mr-2"></i>
+                                                상세 분석
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Tab Content */}
+                                    <div className="flex-1 overflow-y-auto p-6">
+                                        {/* Input Tab */}
+                                        {activeTestTab === 'input' && (
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                                    테스트 입력 데이터 (JSON)
+                                                </label>
+                                                <textarea
+                                                    value={testInput}
+                                                    onChange={(e) => setTestInput(e.target.value)}
+                                                    className="w-full h-64 p-4 bg-gray-900 text-gray-100 font-mono text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                                                    style={{ fontFamily: 'Monaco, Consolas, monospace' }}
+                                                />
+                                                <div className="mt-4 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                                                    <div className="flex items-start gap-3">
+                                                        <i className="ri-information-line text-blue-600 text-lg flex-shrink-0 mt-0.5"></i>
+                                                        <div>
+                                                            <h4 className="text-sm font-semibold text-blue-900 mb-1">입력 형식 안내</h4>
+                                                            <p className="text-sm text-blue-800">
+                                                                JSON 형식으로 테스트 데이터를 입력하세요. 함수의 event 매개변수로 전달됩니다.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Result Tab */}
+                                        {activeTestTab === 'result' && (
+                                            <div>
+                                                {testRunning ? (
+                                                    <div className="flex flex-col items-center justify-center py-12">
+                                                        <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                                                        <p className="text-gray-600 font-medium">함수 실행 중...</p>
+                                                    </div>
+                                                ) : testResult ? (
+                                                    <div className="space-y-4">
+                                                        {/* Status */}
+                                                        <div className={`rounded-xl p-4 border-2 ${testResult.success
+                                                                ? 'bg-green-50 border-green-300'
+                                                                : 'bg-red-50 border-red-300'
+                                                            }`}>
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${testResult.success ? 'bg-green-500' : 'bg-red-500'
+                                                                    }`}>
+                                                                    <i className={`${testResult.success ? 'ri-check-line' : 'ri-close-line'
+                                                                        } text-2xl text-white`}></i>
+                                                                </div>
+                                                                <div>
+                                                                    <div className="font-bold text-gray-900">
+                                                                        {testResult.success ? '✅ 실행 성공' : '❌ 실행 실패'}
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-600">
+                                                                        Status Code: {testResult.statusCode}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Metrics */}
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                                                <div className="text-sm text-gray-600 mb-1">응답 시간</div>
+                                                                <div className="text-2xl font-bold text-purple-600">{testResult.responseTime}ms</div>
+                                                            </div>
+                                                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                                                                <div className="text-sm text-gray-600 mb-1">메모리 사용</div>
+                                                                <div className="text-2xl font-bold text-blue-600">{testResult.memoryUsed}MB</div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Output */}
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                출력 결과
+                                                            </label>
+                                                            <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-100 overflow-x-auto">
+                                                                <pre>{testResult.output}</pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                                                        <i className="ri-play-circle-line text-6xl mb-4"></i>
+                                                        <p>테스트를 실행하려면 아래 버튼을 클릭하세요</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Analysis Tab */}
+                                        {activeTestTab === 'analysis' && (
+                                            <div>
+                                                {testResult ? (
+                                                    <div className="space-y-6">
+                                                        {/* Auto-Tuner Header */}
+                                                        <div className="bg-gradient-to-r from-orange-400 to-red-400 rounded-xl p-6 text-white">
+                                                            <div className="flex items-center gap-3 mb-2">
+                                                                <i className="ri-fire-fill text-3xl"></i>
+                                                                <h3 className="text-2xl font-bold">Auto-Tuner 분석</h3>
+                                                            </div>
+                                                            <p className="text-white/90">
+                                                                실행 데이터를 기반으로 최적 설정을 분석합니다
+                                                            </p>
+                                                        </div>
+
+                                                        {/* Resource Usage */}
+                                                        <div>
+                                                            <h4 className="text-lg font-bold text-gray-900 mb-4">리소스 사용 패턴</h4>
+                                                            <div className="space-y-3">
+                                                                {[
+                                                                    { label: 'CPU', value: testResult.metrics.cpu, color: 'purple', icon: 'ri-cpu-line' },
+                                                                    { label: 'Memory', value: testResult.metrics.memory, color: 'blue', icon: 'ri-database-2-line' },
+                                                                    { label: 'Network', value: testResult.metrics.network, color: 'green', icon: 'ri-global-line' },
+                                                                    { label: 'Disk I/O', value: testResult.metrics.disk, color: 'orange', icon: 'ri-hard-drive-line' }
+                                                                ].map((metric) => (
+                                                                    <div key={metric.label} className="bg-white rounded-xl p-4 border border-gray-200">
+                                                                        <div className="flex items-center justify-between mb-2">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <i className={`${metric.icon} text-${metric.color}-600`}></i>
+                                                                                <span className="font-semibold text-gray-700">{metric.label}</span>
+                                                                            </div>
+                                                                            <span className="text-sm font-bold text-gray-900">{metric.value}%</span>
+                                                                        </div>
+                                                                        <div className="w-full bg-gray-200 rounded-full h-2">
+                                                                            <div
+                                                                                className={`bg-gradient-to-r from-${metric.color}-400 to-${metric.color}-600 h-2 rounded-full transition-all`}
+                                                                                style={{ width: `${metric.value}%` }}
+                                                                            ></div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Recommendations */}
+                                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-6">
+                                                            <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                                                <i className="ri-lightbulb-line text-purple-600"></i>
+                                                                최적화 추천
+                                                            </h4>
+                                                            <div className="space-y-3">
+                                                                <div className="bg-white rounded-lg p-4 border border-purple-100">
+                                                                    <div className="flex items-start gap-3">
+                                                                        <i className="ri-arrow-down-line text-green-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                                                        <div>
+                                                                            <div className="font-semibold text-gray-900 mb-1">메모리 최적화</div>
+                                                                            <div className="text-sm text-gray-600">
+                                                                                현재 {testResult.memoryUsed}MB 사용 중입니다. 256MB로 줄여도 충분합니다.
+                                                                            </div>
+                                                                            <div className="text-sm font-semibold text-green-600 mt-2">
+                                                                                예상 비용 절감: 50%
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="bg-white rounded-lg p-4 border border-purple-100">
+                                                                    <div className="flex items-start gap-3">
+                                                                        <i className="ri-time-line text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                                                        <div>
+                                                                            <div className="font-semibold text-gray-900 mb-1">타임아웃 조정</div>
+                                                                            <div className="text-sm text-gray-600">
+                                                                                평균 응답 시간이 {testResult.responseTime}ms입니다. 타임아웃을 10초로 줄일 수 있습니다.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Insights */}
+                                                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                                                            <div className="flex items-start gap-3">
+                                                                <i className="ri-information-line text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                                                <div>
+                                                                    <h4 className="text-sm font-semibold text-blue-900 mb-2">인사이트</h4>
+                                                                    <ul className="text-sm text-blue-800 space-y-1">
+                                                                        <li>• 함수가 효율적으로 실행되고 있습니다</li>
+                                                                        <li>• Warm Pool 활성화로 Cold Start가 제거되었습니다</li>
+                                                                        <li>• 추가 최적화로 최대 85%의 비용을 절감할 수 있습니다</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                                                        <i className="ri-bar-chart-line text-6xl mb-4"></i>
+                                                        <p>테스트를 먼저 실행해주세요</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Modal Footer */}
+                                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+                                        <div className="flex justify-between items-center">
+                                            <button
+                                                onClick={() => {
+                                                    setShowTestModal(false);
+                                                    setTestResult(null);
+                                                    setActiveTestTab('input');
+                                                }}
+                                                className="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all whitespace-nowrap cursor-pointer"
+                                            >
+                                                닫기
+                                            </button>
+                                            <button
+                                                onClick={handleTestRun}
+                                                disabled={testRunning}
+                                                className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                <i className="ri-play-line"></i>
+                                                {testRunning ? '실행 중...' : '테스트 실행'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
