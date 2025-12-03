@@ -3,180 +3,191 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../dashboard/components/Sidebar';
 import Header from '../dashboard/components/Header';
 
-export default function DeployPageStep1() {
-  const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
-  
-  // 폼 데이터 상태
-  const [formData, setFormData] = useState({
-    name: '',
-    handler: 'handler.main',
-    language: 'python',
-    runtime: 'python3.11',
-    memory: 512,
-    timeout: 30,
-    code: '',
-    warmPoolEnabled: true,
-    warmPoolSize: 2,
-    envVars: [] as Array<{ key: string; value: string }>
-  });
+export default function DeployPage() {
 
-  const languages = [
-    { id: 'python', name: 'Python', icon: 'ri-python-line', runtime: 'python3.11', version: '3.11' },
-    { id: 'nodejs', name: 'Node.js', icon: 'ri-nodejs-line', runtime: 'nodejs20.x', version: '20.x' },
-    { id: 'cpp', name: 'C++', icon: 'ri-terminal-box-line', runtime: 'cpp17', version: 'C++17' },
-    { id: 'go', name: 'Go', icon: 'ri-code-s-slash-line', runtime: 'go1.21', version: '1.21' }
-  ];
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showGithubModal, setShowGithubModal] = useState(false);
+    const [githubUrl, setGithubUrl] = useState('');
+    const [githubBranch, setGithubBranch] = useState('main');
+    const [githubFilePath, setGithubFilePath] = useState('');
 
-  const memoryOptions = [128, 256, 512, 1024, 2048, 4096];
+    const codeTemplates: Record<string, string> = {
+        python: `def handler(event, context):\n    return {\n        'statusCode': 200,\n        'body': 'Hello from NanoGrid!'\n    }`,
+        nodejs: `exports.handler = async (event, context) => {\n    return {\n        statusCode: 200,\n        body: 'Hello from NanoGrid!'\n    };\n};`,
+        cpp: `#include <iostream>\nextern "C" {\n    const char* handler(const char* event) {\n        return "{\\"statusCode\\": 200}";\n    }\n}`,
+        go: `package main\nimport "encoding/json"\nfunc Handler() {}`
+    };
 
-  // 언어 변경 핸들러
-  const handleLanguageChange = (langId: string) => {
-    const lang = languages.find(l => l.id === langId);
-    const isBinaryLanguage = langId === 'cpp' || langId === 'go';
-    
-    setFormData({
-      ...formData,
-      language: langId,
-      runtime: lang?.runtime || '',
-      handler: isBinaryLanguage ? 'main' : 'handler.main',
-      code: '' // 코드는 다음 단계에서 처리
+    const navigate = useNavigate();
+    const [currentStep, setCurrentStep] = useState(1);
+
+    // 폼 데이터 상태
+    const [formData, setFormData] = useState({
+        name: '',
+        handler: 'handler.main',
+        language: 'python',
+        runtime: 'python3.11',
+        memory: 512,
+        timeout: 30,
+        code: '',
+        warmPoolEnabled: true,
+        warmPoolSize: 2,
+        envVars: [] as Array<{ key: string; value: string }>
     });
-  };
 
-  // 환경변수 관리 함수들
-  const addEnvVar = () => {
-    setFormData({ ...formData, envVars: [...formData.envVars, { key: '', value: '' }] });
-  };
+    const languages = [
+        { id: 'python', name: 'Python', icon: 'ri-python-line', runtime: 'python3.11', version: '3.11' },
+        { id: 'nodejs', name: 'Node.js', icon: 'ri-nodejs-line', runtime: 'nodejs20.x', version: '20.x' },
+        { id: 'cpp', name: 'C++', icon: 'ri-terminal-box-line', runtime: 'cpp17', version: 'C++17' },
+        { id: 'go', name: 'Go', icon: 'ri-code-s-slash-line', runtime: 'go1.21', version: '1.21' }
+    ];
 
-  const updateEnvVar = (index: number, field: 'key' | 'value', value: string) => {
-    const newEnvVars = [...formData.envVars];
-    newEnvVars[index][field] = value;
-    setFormData({ ...formData, envVars: newEnvVars });
-  };
+    const memoryOptions = [128, 256, 512, 1024, 2048, 4096];
 
-  const removeEnvVar = (index: number) => {
-    const newEnvVars = formData.envVars.filter((_, i) => i !== index);
-    setFormData({ ...formData, envVars: newEnvVars });
-  };
+    // 언어 변경 핸들러
+    const handleLanguageChange = (langId: string) => {
+        const lang = languages.find(l => l.id === langId);
+        const isBinaryLanguage = langId === 'cpp' || langId === 'go';
 
-  const isHandlerDisabled = formData.language === 'cpp' || formData.language === 'go';
+        setFormData({
+            ...formData,
+            language: langId,
+            runtime: lang?.runtime || '',
+            handler: isBinaryLanguage ? 'main' : 'handler.main',
+            code: '' // 코드는 다음 단계에서 처리
+        });
+    };
 
-  return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-      <Sidebar />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        
-        <main className="flex-1 overflow-y-auto">
-          <div className="max-w-5xl mx-auto px-6 py-8">
-            {/* Progress Steps */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                {[1, 2, 3].map((s) => (
-                  <div key={s} className="flex items-center flex-1">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                      currentStep >= s ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow-md' : 'bg-white text-gray-400 border-2 border-gray-200'
-                    }`}>
-                      {s}
+    // 환경변수 관리 함수들
+    const addEnvVar = () => {
+        setFormData({ ...formData, envVars: [...formData.envVars, { key: '', value: '' }] });
+    };
+
+    const updateEnvVar = (index: number, field: 'key' | 'value', value: string) => {
+        const newEnvVars = [...formData.envVars];
+        newEnvVars[index][field] = value;
+        setFormData({ ...formData, envVars: newEnvVars });
+    };
+
+    const removeEnvVar = (index: number) => {
+        const newEnvVars = formData.envVars.filter((_, i) => i !== index);
+        setFormData({ ...formData, envVars: newEnvVars });
+    };
+
+    const isHandlerDisabled = formData.language === 'cpp' || formData.language === 'go';
+
+    return (
+        <div className="flex h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+            <Sidebar />
+
+            <div className="flex-1 flex flex-col overflow-hidden">
+                <Header />
+
+                <main className="flex-1 overflow-y-auto">
+                    <div className="max-w-5xl mx-auto px-6 py-8">
+                        {/* Progress Steps */}
+                        <div className="mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                {[1, 2, 3].map((s) => (
+                                    <div key={s} className="flex items-center flex-1">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${currentStep >= s ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow-md' : 'bg-white text-gray-400 border-2 border-gray-200'
+                                            }`}>
+                                            {s}
+                                        </div>
+                                        {s < 3 && (
+                                            <div className={`flex-1 h-1 mx-4 transition-all rounded-full ${currentStep > s ? 'bg-gradient-to-r from-purple-400 to-pink-400' : 'bg-gray-200'
+                                                }`}></div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex justify-between">
+                                <span className={`text-sm flex-1 text-center ${currentStep >= 1 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>기본 설정</span>
+                                <span className={`text-sm flex-1 text-center ${currentStep >= 2 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>코드 작성</span>
+                                <span className={`text-sm flex-1 text-center ${currentStep >= 3 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>배포 확인</span>
+                            </div>
+                        </div>
+
+                        {/* Step 1 Content */}
+                        {currentStep === 1 && (
+                            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-8 shadow-sm">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">기본 설정</h2>
+
+                                <div className="space-y-6">
+                                    {/* 함수명 입력 */}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">함수명</label>
+                                        <input
+                                            type="text"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            placeholder="my-function"
+                                            className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                                        />
+                                    </div>
+
+                                    {/* 런타임 선택 그리드 */}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-3">프로그래밍 언어 (Runtime)</label>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {languages.map((lang) => (
+                                                <button
+                                                    key={lang.id}
+                                                    onClick={() => handleLanguageChange(lang.id)}
+                                                    className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${formData.language === lang.id
+                                                            ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md'
+                                                            : 'border-purple-100 bg-white hover:border-purple-200 hover:shadow-sm'
+                                                        }`}
+                                                >
+                                                    <i className={`${lang.icon} text-3xl mb-2 ${formData.language === lang.id ? 'text-purple-600' : 'text-gray-600'}`}></i>
+                                                    <div className="text-sm font-semibold">{lang.name}</div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* 메모리 & 타임아웃 */}
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">메모리 (MB)</label>
+                                            <select
+                                                value={formData.memory}
+                                                onChange={(e) => setFormData({ ...formData, memory: Number(e.target.value) })}
+                                                className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                            >
+                                                {memoryOptions.map((mem) => <option key={mem} value={mem}>{mem} MB</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">타임아웃 (초)</label>
+                                            <select
+                                                value={formData.timeout}
+                                                onChange={(e) => setFormData({ ...formData, timeout: Number(e.target.value) })}
+                                                className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                            >
+                                                <option value="10">10초</option>
+                                                <option value="30">30초</option>
+                                                <option value="60">60초</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-end gap-3 mt-8">
+                                    <button onClick={() => navigate('/dashboard')} className="px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all">취소</button>
+                                    <button
+                                        onClick={() => setCurrentStep(2)}
+                                        disabled={!formData.name}
+                                        className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        다음 단계 (코드 작성)
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    {s < 3 && (
-                      <div className={`flex-1 h-1 mx-4 transition-all rounded-full ${
-                        currentStep > s ? 'bg-gradient-to-r from-purple-400 to-pink-400' : 'bg-gray-200'
-                      }`}></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-between">
-                <span className={`text-sm flex-1 text-center ${currentStep >= 1 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>기본 설정</span>
-                <span className={`text-sm flex-1 text-center ${currentStep >= 2 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>코드 작성</span>
-                <span className={`text-sm flex-1 text-center ${currentStep >= 3 ? 'text-purple-600 font-medium' : 'text-gray-400'}`}>배포 확인</span>
-              </div>
+                </main>
             </div>
-
-            {/* Step 1 Content */}
-            {currentStep === 1 && (
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-8 shadow-sm">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">기본 설정</h2>
-                
-                <div className="space-y-6">
-                  {/* 함수명 입력 */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">함수명</label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="my-function"
-                      className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
-                    />
-                  </div>
-
-                  {/* 런타임 선택 그리드 */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">프로그래밍 언어 (Runtime)</label>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.id}
-                          onClick={() => handleLanguageChange(lang.id)}
-                          className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                            formData.language === lang.id
-                              ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md'
-                              : 'border-purple-100 bg-white hover:border-purple-200 hover:shadow-sm'
-                          }`}
-                        >
-                          <i className={`${lang.icon} text-3xl mb-2 ${formData.language === lang.id ? 'text-purple-600' : 'text-gray-600'}`}></i>
-                          <div className="text-sm font-semibold">{lang.name}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 메모리 & 타임아웃 */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">메모리 (MB)</label>
-                      <select
-                        value={formData.memory}
-                        onChange={(e) => setFormData({ ...formData, memory: Number(e.target.value) })}
-                        className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
-                      >
-                        {memoryOptions.map((mem) => <option key={mem} value={mem}>{mem} MB</option>)}
-                      </select>
-                    </div>
-                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">타임아웃 (초)</label>
-                      <select
-                        value={formData.timeout}
-                        onChange={(e) => setFormData({ ...formData, timeout: Number(e.target.value) })}
-                        className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
-                      >
-                        <option value="10">10초</option>
-                        <option value="30">30초</option>
-                        <option value="60">60초</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3 mt-8">
-                  <button onClick={() => navigate('/dashboard')} className="px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all">취소</button>
-                  <button
-                    onClick={() => setCurrentStep(2)}
-                    disabled={!formData.name}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    다음 단계 (코드 작성)
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
