@@ -933,8 +933,8 @@ export default function DeployPage() {
                                             <button
                                                 onClick={() => setActiveTestTab('input')}
                                                 className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'input'
-                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
-                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                    : 'text-gray-600 hover:text-gray-900'
                                                     }`}
                                             >
                                                 <i className="ri-code-line mr-2"></i>
@@ -943,8 +943,8 @@ export default function DeployPage() {
                                             <button
                                                 onClick={() => setActiveTestTab('result')}
                                                 className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'result'
-                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
-                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                    : 'text-gray-600 hover:text-gray-900'
                                                     }`}
                                             >
                                                 <i className="ri-terminal-line mr-2"></i>
@@ -953,8 +953,8 @@ export default function DeployPage() {
                                             <button
                                                 onClick={() => setActiveTestTab('analysis')}
                                                 className={`px-4 py-3 font-semibold text-sm transition-all cursor-pointer ${activeTestTab === 'analysis'
-                                                        ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
-                                                        : 'text-gray-600 hover:text-gray-900'
+                                                    ? 'text-purple-600 border-b-2 border-purple-600 bg-white'
+                                                    : 'text-gray-600 hover:text-gray-900'
                                                     }`}
                                             >
                                                 <i className="ri-bar-chart-line mr-2"></i>
@@ -1003,8 +1003,8 @@ export default function DeployPage() {
                                                     <div className="space-y-4">
                                                         {/* Status */}
                                                         <div className={`rounded-xl p-4 border-2 ${testResult.success
-                                                                ? 'bg-green-50 border-green-300'
-                                                                : 'bg-red-50 border-red-300'
+                                                            ? 'bg-green-50 border-green-300'
+                                                            : 'bg-red-50 border-red-300'
                                                             }`}>
                                                             <div className="flex items-center gap-3">
                                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${testResult.success ? 'bg-green-500' : 'bg-red-500'
@@ -1185,6 +1185,23 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        <style>{`
+        @keyframes progress {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+        .animate-progress {
+          animation: progress 1.5s ease-in-out infinite;
+        }
+        @keyframes scale-in {
+          0% { transform: scale(0.9); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out;
+        }
+      `}</style>
                     </div>
                 </main>
             </div>
