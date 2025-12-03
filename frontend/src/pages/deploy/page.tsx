@@ -137,7 +137,7 @@ export default function DeployPage() {
                             </div>
                         </div>
 
-                        {/* Step 1 Content */}
+                        {/* Content */}
                         {currentStep === 1 && (
                             <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-8 shadow-sm">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-6">기본 설정</h2>
@@ -211,6 +211,46 @@ export default function DeployPage() {
                                     >
                                         다음 단계 (코드 작성)
                                     </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Step 2: Code Editor */}
+                        {currentStep === 2 && (
+                            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-8 shadow-sm">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">코드 작성</h2>
+
+                                <div className="mb-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="text-sm font-semibold text-gray-700">함수 코드</label>
+                                        <div className="flex items-center gap-2">
+                                            <input ref={fileInputRef} type="file" accept={getFileExtension()} onChange={handleFileChange} className="hidden" />
+                                            <button onClick={handleFileUpload} className="px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-purple-200 hover:bg-purple-50 rounded-lg transition-all">
+                                                <i className="ri-file-upload-line mr-1"></i> 파일 업로드
+                                            </button>
+                                            <button onClick={() => setShowGithubModal(true)} className="px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-purple-200 hover:bg-purple-50 rounded-lg transition-all">
+                                                <i className="ri-github-line mr-1"></i> GitHub 연동
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="border border-purple-200 rounded-xl overflow-hidden shadow-sm">
+                                        <div className="bg-gray-900 px-4 py-2 flex items-center justify-between">
+                                            {/* Editor Header UI */}
+                                            <span className="text-gray-400 text-xs">{formData.language}</span>
+                                        </div>
+                                        <textarea
+                                            value={formData.code || codeTemplates[formData.language]}
+                                            onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                                            className="w-full h-96 p-4 bg-gray-900 text-gray-100 font-mono text-sm focus:outline-none resize-none"
+                                            style={{ fontFamily: 'Monaco, Consolas, monospace' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between gap-3">
+                                    <button onClick={() => setCurrentStep(1)} className="px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all">이전 단계</button>
+                                    <button onClick={() => setCurrentStep(3)} className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all">다음 단계</button>
                                 </div>
                             </div>
                         )}
