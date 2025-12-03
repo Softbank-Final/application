@@ -35,7 +35,7 @@ export const authApi = {
     return apiClient.get<User>('/auth/me');
   },
 
-// Update profile
+  // Update profile
   updateProfile: async (data: Partial<User>): Promise<User> => {
     return apiClient.put<User>('/auth/profile', data);
   },
@@ -47,6 +47,19 @@ export const authApi = {
   ): Promise<void> => {
     return apiClient.post<void>('/auth/change-password', {
       currentPassword,
+      newPassword,
+    });
+  },
+
+  // Request password reset
+  requestPasswordReset: async (email: string): Promise<void> => {
+    return apiClient.post<void>('/auth/forgot-password', { email });
+  },
+
+  // Reset password
+  resetPassword: async (token: string, newPassword: string): Promise<void> => {
+    return apiClient.post<void>('/auth/reset-password', {
+      token,
       newPassword,
     });
   },
