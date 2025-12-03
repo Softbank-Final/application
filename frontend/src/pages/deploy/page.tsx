@@ -709,6 +709,105 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Build Error Modal */}
+                        {showBuildErrorModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative animate-scale-in">
+                                    <div className="text-center mb-6">
+                                        <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                            <i className="ri-tools-line text-4xl text-white"></i>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">🛠️ 빌드 실패 (Build Failed)</h3>
+                                        <p className="text-gray-600 mb-6">
+                                            코드 컴파일 중 오류가 발견되었습니다.
+                                        </p>
+                                    </div>
+
+                                    {/* Error Details */}
+                                    <div className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-5 mb-6">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i className="ri-error-warning-line text-xl text-white"></i>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-bold text-red-900 mb-1">컴파일 오류</h4>
+                                                <p className="text-sm text-red-800">
+                                                    C++ 코드에서 문법 오류가 발견되어 빌드를 중단했습니다.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Terminal-style Error Log */}
+                                        <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                                            <div className="text-red-400 mb-2">
+                                                <span className="text-gray-500">handler.cpp:</span>
+                                                <span className="text-yellow-400">{buildError.line}</span>
+                                                <span className="text-gray-500">:</span>
+                                                <span className="text-yellow-400">15</span>
+                                                <span className="text-gray-500">: </span>
+                                                <span className="text-red-400">error: </span>
+                                                <span className="text-white">{buildError.message}</span>
+                                            </div>
+                                            <div className="text-gray-400 mb-1">
+                                                {buildError.line - 1}  |  const char* result = process(event);
+                                            </div>
+                                            <div className="text-white mb-1">
+                                                {buildError.line}  |  {buildError.code}
+                                            </div>
+                                            <div className="text-gray-400 mb-3">
+                                                {buildError.line + 1}  |  {'}'}
+                                            </div>
+                                            <div className="text-green-400">
+                                                <span className="text-gray-500">^</span>
+                                                <span className="text-gray-500 ml-2">여기에 문법 오류가 있습니다</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Troubleshooting Tips */}
+                                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6">
+                                        <div className="flex items-start gap-3">
+                                            <i className="ri-lightbulb-line text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-blue-900 mb-2">해결 방법</h4>
+                                                <ul className="text-sm text-blue-800 space-y-1">
+                                                    <li>• 코드 편집기로 돌아가 {buildError.line}번째 줄을 확인하세요</li>
+                                                    <li>• 세미콜론(;), 괄호(), 중괄호{'{}'} 누락 여부를 점검하세요</li>
+                                                    <li>• 함수 선언과 정의가 일치하는지 확인하세요</li>
+                                                    <li>• 필요한 헤더 파일(#include)이 모두 포함되었는지 확인하세요</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex flex-col gap-3">
+                                        <button
+                                            onClick={handleCloseBuildError}
+                                            className="w-full px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center justify-center gap-2"
+                                        >
+                                            <i className="ri-code-line text-xl"></i>
+                                            코드 수정하러 가기
+                                        </button>
+                                        <button
+                                            onClick={() => setShowBuildErrorModal(false)}
+                                            className="w-full px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all whitespace-nowrap cursor-pointer"
+                                        >
+                                            닫기
+                                        </button>
+                                    </div>
+
+                                    {/* Support Link */}
+                                    <div className="mt-6 pt-6 border-t border-gray-200">
+                                        <p className="text-sm text-gray-600 text-center">
+                                            💡 NanoGrid는 배포 전 자동으로 코드를 검증하여 런타임 오류를 방지합니다
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
