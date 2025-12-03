@@ -789,8 +789,131 @@ return (
               </div>
             )}
       </main>
-    </div>
-  </div>
-);
+            {/* Logs Tab */}
+            {activeTab === 'logs' && (
+              <div className="space-y-6">
+                {/* Header with Explorer Link */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-xl p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i className="ri-file-list-3-line text-2xl text-white"></i>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-blue-900 mb-1">최근 실행 로그</h3>
+                        <p className="text-sm text-blue-800">
+                          최근 20개의 로그를 표시합니다. 전체 로그 및 고급 필터링은 Logs Explorer를 이용하세요.
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      to={`/logs?functionId=${id}`}
+                      className="px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2"
+                    >
+                      <i className="ri-external-link-line text-lg"></i>
+                      Logs Explorer에서 전체 보기
+                    </Link>
+                  </div>
+                </div>
 
+                {/* Simple Filters */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        로그 레벨
+                      </label>
+                      <select
+                        value={logFilters.level}
+                        onChange={(e) => setLogFilters({ ...logFilters, level: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm"
+                      >
+                        <option value="all">전체</option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                      </select>
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        검색
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={logFilters.search}
+                          onChange={(e) => setLogFilters({ ...logFilters, search: e.target.value })}
+                          placeholder="로그 메시지 검색..."
+                          className="w-full px-4 py-2.5 pl-10 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm"
+                        />
+                        <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                      </div>
+                    </div>
+
+                    <div className="pt-7">
+                      <button
+                        onClick={() => setLogFilters({ level: 'all', search: '' })}
+                        className="px-4 py-2.5 bg-white border border-purple-200 text-gray-700 font-medium rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer text-sm"
+                      >
+                        <i className="ri-refresh-line mr-1"></i>
+                        초기화
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Logs List */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 shadow-sm overflow-hidden">
+                  <div className="px-6 py-4 border-b border-purple-100">
+                    <h3 className="text-lg font-bold text-gray-900">실행 로그</h3>
+                  </div>
+
+                  <div className="divide-y divide-purple-100">
+                    {mockLogs.slice(0, 20).map((log) => (
+                      <div
+                        key={log.id}
+                        className="px-6 py-4 hover:bg-purple-50/30 transition-colors"
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="flex-shrink-0">
+                            <div
+                              className={`w-2 h-2 rounded-full mt-2 ${
+                                log.level === 'error'
+                                  ? 'bg-red-500'
+                                  : log.level === 'warning'
+                                  ? 'bg-yellow-500'
+                                  : 'bg-green-500'
+                              }`}
+                            ></div>
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                              <span
+                                className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                                  log.level === 'error'
+                                    ? 'bg-red-100 text-red-700'
+                                    : log.level === 'warning'
+                                    ? 'bg-yellow-100 text-yellow-700'
+                                    : 'bg-green-100 text-green-700'
+                                }`}
+                              >
+                                {log.level.toUpperCase()}
+                              </span>
+                              <span className="text-sm text-gray-600">{log.timestamp}</span>
+                              <span className="text-xs text-gray-400 font-mono">
+                                {log.requestId}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-900 break-all">{log.message}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  </div>
+      </div>
+            )}</div>
+  );
 }
