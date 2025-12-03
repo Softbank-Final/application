@@ -355,19 +355,19 @@ export default function DeployPage() {
                                             <div
                                                 key={index}
                                                 className={`relative border-2 rounded-xl p-5 transition-all duration-500 ${deploymentStep > index
-                                                        ? 'border-green-400 bg-green-50'
-                                                        : deploymentStep === index
-                                                            ? `border-transparent bg-gradient-to-r ${step.color} shadow-lg`
-                                                            : 'border-gray-200 bg-gray-50 opacity-50'
+                                                    ? 'border-green-400 bg-green-50'
+                                                    : deploymentStep === index
+                                                        ? `border-transparent bg-gradient-to-r ${step.color} shadow-lg`
+                                                        : 'border-gray-200 bg-gray-50 opacity-50'
                                                     }`}
                                             >
                                                 <div className="flex items-start gap-4">
                                                     <div
                                                         className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${deploymentStep > index
-                                                                ? 'bg-green-500'
-                                                                : deploymentStep === index
-                                                                    ? 'bg-white'
-                                                                    : 'bg-gray-300'
+                                                            ? 'bg-green-500'
+                                                            : deploymentStep === index
+                                                                ? 'bg-white'
+                                                                : 'bg-gray-300'
                                                             }`}
                                                     >
                                                         {deploymentStep > index ? (
@@ -438,6 +438,104 @@ export default function DeployPage() {
                                             </div>
                                         </div>
                                     )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* GitHub Connect Modal */}
+                        {showGithubModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative animate-scale-in">
+                                    <button
+                                        onClick={() => setShowGithubModal(false)}
+                                        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                                    >
+                                        <i className="ri-close-line text-xl text-gray-600"></i>
+                                    </button>
+
+                                    <div className="text-center mb-6">
+                                        <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                            <i className="ri-github-fill text-3xl text-white"></i>
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">GitHub 저장소 연동</h3>
+                                        <p className="text-gray-600 text-sm">
+                                            GitHub 저장소에서 코드를 가져옵니다
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-4 mb-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                저장소 URL
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={githubUrl}
+                                                onChange={(e) => setGithubUrl(e.target.value)}
+                                                placeholder="https://github.com/username/repository"
+                                                className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                브랜치
+                                            </label>
+                                            <select
+                                                value={githubBranch}
+                                                onChange={(e) => setGithubBranch(e.target.value)}
+                                                className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm"
+                                            >
+                                                <option value="main">main</option>
+                                                <option value="master">master</option>
+                                                <option value="develop">develop</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                파일 경로
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={githubFilePath}
+                                                onChange={(e) => setGithubFilePath(e.target.value)}
+                                                placeholder="src/handler.py"
+                                                className="w-full px-4 py-3 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6">
+                                        <div className="flex items-start gap-3">
+                                            <i className="ri-information-line text-blue-600 text-lg flex-shrink-0 mt-0.5"></i>
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-blue-900 mb-1">안내사항</h4>
+                                                <ul className="text-xs text-blue-800 space-y-1">
+                                                    <li>• Public 저장소만 연동 가능합니다</li>
+                                                    <li>• Private 저장소는 Personal Access Token이 필요합니다</li>
+                                                    <li>• 파일 경로는 저장소 루트 기준입니다</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => setShowGithubModal(false)}
+                                            className="flex-1 px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer"
+                                        >
+                                            취소
+                                        </button>
+                                        <button
+                                            onClick={handleGithubImport}
+                                            disabled={!githubUrl || !githubFilePath}
+                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        >
+                                            <i className="ri-download-line"></i>
+                                            코드 가져오기
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}
