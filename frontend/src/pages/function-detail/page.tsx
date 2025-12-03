@@ -561,7 +561,46 @@ return (
                     </div>
                   </div>
                 </div>
-        </div>
+
+                
+                {/* Recent Invocations */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 shadow-sm">
+                  <div className="px-6 py-4 border-b border-purple-100">
+                    <h3 className="text-lg font-bold text-gray-900">최근 실행 내역</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-purple-50/50 border-b border-purple-100">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">시간</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">응답 시간</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">메모리 사용</th>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">상태</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-purple-100">
+                        {recentInvocations.map((inv) => (
+                          <tr key={inv.id} className="hover:bg-purple-50/30 transition-colors">
+                            <td className="px-6 py-4 text-sm text-gray-700">{inv.timestamp}</td>
+                            <td className="px-6 py-4 text-sm text-gray-700">{inv.duration}ms</td>
+                            <td className="px-6 py-4 text-sm text-gray-700">{inv.memory} MB</td>
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
+                                inv.status === 'success'
+                                  ? 'bg-green-50 text-green-600 border border-green-200'
+                                  : 'bg-red-50 text-red-600 border border-red-200'
+                              }`}>
+                                {inv.status === 'success' ? '성공' : '실패'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
       </main>
     </div>
   </div>
