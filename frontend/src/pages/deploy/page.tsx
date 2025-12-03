@@ -650,6 +650,65 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+                        {/* Success Modal */}
+                        {showSuccessModal && (
+                            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-scale-in">
+                                    <button
+                                        onClick={handleCloseModal}
+                                        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                                    >
+                                        <i className="ri-close-line text-xl text-gray-600"></i>
+                                    </button>
+
+                                    <div className="text-center">
+                                        <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                            <i className="ri-check-line text-4xl text-white"></i>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">배포 완료!</h3>
+                                        <p className="text-gray-600 mb-4">
+                                            함수가 성공적으로 배포되었습니다.
+                                        </p>
+
+                                        <div className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 rounded-xl p-4 mb-6">
+                                            <div className="flex items-center justify-center gap-2 mb-2">
+                                                <i className="ri-flashlight-fill text-orange-600 text-xl"></i>
+                                                <span className="font-bold text-orange-900">예상 Cold Start 시간</span>
+                                            </div>
+                                            <div className="text-4xl font-black text-orange-600">0ms</div>
+                                            <p className="text-xs text-orange-800 mt-2">
+                                                Warm Pool 덕분에 즉시 실행 가능합니다
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 mb-6 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-2">함수 이름</div>
+                                            <div className="font-semibold text-gray-900">{formData.name}</div>
+                                        </div>
+
+                                        <div className="flex flex-col gap-3">
+                                            <button
+                                                onClick={() => {
+                                                    setShowSuccessModal(false);
+                                                    navigate(`/function/${formData.name}`);
+                                                }}
+                                                className="w-full px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center justify-center gap-2"
+                                            >
+                                                <i className="ri-play-circle-line text-xl"></i>
+                                                ⚡ 바로 실행하기 (Test Run)
+                                            </button>
+                                            <button
+                                                onClick={handleCloseModal}
+                                                className="w-full px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer"
+                                            >
+                                                대시보드로 이동
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
