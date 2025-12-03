@@ -932,6 +932,158 @@ return (
                 </div>
               </div>
             )}
+
+        
+            {/* Settings Tab */}
+            {activeTab === 'settings' && (
+              <div className="space-y-6">
+                {/* General Settings */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">일반 설정</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">함수명</label>
+                      <input
+                        type="text"
+                        defaultValue={functionData.name}
+                        className="w-full px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">설명</label>
+                      <textarea
+                        rows={3}
+                        placeholder="함수에 대한 설명을 입력하세요..."
+                        className="w-full px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all resize-none"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Runtime Settings */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">런타임 설정</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">메모리 (MB)</label>
+                      <select
+                        defaultValue={functionData.memory}
+                        className="w-full px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      >
+                        <option value="128">128 MB</option>
+                        <option value="256">256 MB</option>
+                        <option value="512">512 MB</option>
+                        <option value="1024">1024 MB</option>
+                        <option value="2048">2048 MB</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">타임아웃 (초)</label>
+                      <select
+                        defaultValue={functionData.timeout}
+                        className="w-full px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      >
+                        <option value="10">10초</option>
+                        <option value="30">30초</option>
+                        <option value="60">60초</option>
+                        <option value="120">120초</option>
+                        <option value="300">300초</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Environment Variables */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-900">환경 변수</h3>
+                    <button className="px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer text-sm flex items-center gap-2">
+                      <i className="ri-add-line"></i>
+                      추가
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="text"
+                        placeholder="KEY"
+                        className="flex-1 px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      />
+                      <input
+                        type="text"
+                        placeholder="VALUE"
+                        className="flex-1 px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      />
+                      <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-red-50 transition-colors cursor-pointer">
+                        <i className="ri-delete-bin-line text-red-600"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Warm Pool Settings */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Warm Pool 설정</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold text-gray-900 mb-1">Warm Pool 활성화</div>
+                        <div className="text-sm text-gray-600">Cold Start를 0ms로 유지합니다</div>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400 peer-checked:to-pink-400"></div>
+                      </label>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">대기 인스턴스 수</label>
+                      <select
+                        defaultValue="3"
+                        className="w-full px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+                      >
+                        <option value="1">1개</option>
+                        <option value="2">2개</option>
+                        <option value="3">3개</option>
+                        <option value="5">5개</option>
+                        <option value="10">10개</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Danger Zone */}
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
+                  <h3 className="text-lg font-bold text-red-900 mb-4">위험 구역</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold text-red-900 mb-1">함수 삭제</div>
+                        <div className="text-sm text-red-700">이 작업은 되돌릴 수 없습니다</div>
+                      </div>
+                      <button className="px-4 py-2 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-all whitespace-nowrap cursor-pointer">
+                        삭제하기
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="flex items-center justify-end gap-3">
+                  <button className="px-6 py-2.5 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer">
+                    취소
+                  </button>
+                  <button className="px-6 py-2.5 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer">
+                    변경사항 저장
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   </div>
 );
