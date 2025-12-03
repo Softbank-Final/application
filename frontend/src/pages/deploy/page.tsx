@@ -808,6 +808,97 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Warning Modal (Partial Success) */}
+                        {showWarningModal && (
+                            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative animate-scale-in">
+                                    <div className="text-center">
+                                        <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                            <i className="ri-error-warning-line text-4xl text-white"></i>
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">⚠️ 배포 완료 (경고)</h3>
+                                        <p className="text-gray-600 mb-6">
+                                            함수는 배포되었으나 예열에 실패했습니다.
+                                        </p>
+
+                                        {/* Warning Details */}
+                                        <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-xl p-5 mb-6 text-left">
+                                            <div className="flex items-start gap-3 mb-4">
+                                                <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <i className="ri-time-line text-xl text-white"></i>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-bold text-yellow-900 mb-1">Warm Pool 할당 지연</h4>
+                                                    <p className="text-sm text-yellow-800">
+                                                        현재 사용자가 많아 컨테이너 예열이 지연되고 있습니다.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white/80 rounded-lg p-4 border border-yellow-200">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <span className="text-sm font-semibold text-gray-700">예상 Cold Start 시간</span>
+                                                    <span className="text-2xl font-bold text-yellow-600">~150ms</span>
+                                                </div>
+                                                <div className="text-xs text-gray-600">
+                                                    첫 실행 시 컨테이너 초기화로 인한 지연이 발생할 수 있습니다.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Info Box */}
+                                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6 text-left">
+                                            <div className="flex items-start gap-3">
+                                                <i className="ri-information-line text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                                <div>
+                                                    <h4 className="text-sm font-semibold text-blue-900 mb-2">안내사항</h4>
+                                                    <ul className="text-sm text-blue-800 space-y-1">
+                                                        <li>• 함수는 정상적으로 작동하며 DynamoDB에 등록되었습니다</li>
+                                                        <li>• 몇 분 후 자동으로 Warm Pool에 추가될 예정입니다</li>
+                                                        <li>• 두 번째 실행부터는 0ms Cold Start가 보장됩니다</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Function Info */}
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 mb-6 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-2">배포된 함수</div>
+                                            <div className="font-semibold text-gray-900">{formData.name}</div>
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="flex flex-col gap-3">
+                                            <button
+                                                onClick={() => {
+                                                    setShowWarningModal(false);
+                                                    navigate(`/function/${formData.name}`);
+                                                }}
+                                                className="w-full px-6 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center justify-center gap-2"
+                                            >
+                                                <i className="ri-play-circle-line text-xl"></i>
+                                                🐢 실행하기 (Cold Start 예상)
+                                            </button>
+                                            <button
+                                                onClick={handleCloseWarning}
+                                                className="w-full px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer"
+                                            >
+                                                대시보드로 이동
+                                            </button>
+                                        </div>
+
+                                        {/* Note */}
+                                        <div className="mt-6 pt-6 border-t border-gray-200">
+                                            <p className="text-sm text-gray-600">
+                                                💡 NanoGrid Warm Pool은 사용 패턴을 학습하여 자동으로 최적화됩니다
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
