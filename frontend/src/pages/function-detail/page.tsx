@@ -219,4 +219,84 @@ export default function FunctionDetailPage() {
     };
     return icons[level] || 'ri-information-line';
   };
+
+    const handleTestRun = async () => {
+    setIsTestRunning(true);
+    setTestResult(null);
+    setActiveTestTab('result');
+
+    // 테스트 실행 시뮬레이션
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // 랜덤 결과 생성
+    const success = Math.random() > 0.2;
+    const executionTime = Math.floor(Math.random() * 100) + 30;
+    const memoryUsed = Math.floor(Math.random() * 100) + 400;
+    const cpuUsage = Math.floor(Math.random() * 60) + 20;
+    const networkRx = Math.floor(Math.random() * 50) + 10;
+    const networkTx = Math.floor(Math.random() * 30) + 5;
+    const diskRead = Math.floor(Math.random() * 20) + 5;
+    const diskWrite = Math.floor(Math.random() * 15) + 3;
+
+    if (success) {
+      setTestResult({
+        status: 'success',
+        success: true,
+        statusCode: 200,
+        body: {
+          message: 'Function executed successfully',
+          data: {
+            processed: true,
+            timestamp: new Date().toISOString(),
+            result: 'Test completed'
+          }
+        },
+        output: JSON.stringify({
+          statusCode: 200,
+          body: {
+            message: 'Function executed successfully',
+            data: {
+              processed: true,
+              timestamp: new Date().toISOString(),
+              result: 'Test completed'
+            }
+          }
+        }, null, 2),
+        executionTime,
+        responseTime: executionTime,
+        memoryUsed,
+        memoryAllocated: 512,
+        cpuUsage,
+        networkRx,
+        networkTx,
+        diskRead,
+        diskWrite
+      });
+    } else {
+      setTestResult({
+        status: 'error',
+        success: false,
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Function execution failed',
+        output: JSON.stringify({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: 'Function execution failed'
+        }, null, 2),
+        executionTime,
+        responseTime: executionTime,
+        memoryUsed,
+        memoryAllocated: 512,
+        cpuUsage,
+        networkRx,
+        networkTx,
+        diskRead,
+        diskWrite
+      });
+    }
+
+    setIsTestRunning(false);
+  };
+
 }
