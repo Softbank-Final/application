@@ -912,8 +912,28 @@ return (
                       </div>
                     ))}
                   </div>
+
+                  
+                  {/* Footer with Explorer Link */}
+                  <div className="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 border-t border-purple-100">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600">
+                        최근 20개의 로그만 표시됩니다
+                      </p>
+                      <Link
+                        to={`/logs?functionId=${id}`}
+                        className="text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors cursor-pointer flex items-center gap-1"
+                      >
+                        전체 로그 보기
+                        <i className="ri-arrow-right-line"></i>
+                      </Link>
+                    </div>
                   </div>
-      </div>
-            )}</div>
-  );
+                </div>
+              </div>
+            )}
+    </div>
+  </div>
+);
+
 }
