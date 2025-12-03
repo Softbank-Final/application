@@ -254,6 +254,92 @@ export default function DeployPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Step 3: Deploy Confirmation */}
+                        {currentStep === 3 && (
+                            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-purple-100 p-8 shadow-sm">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">배포 확인</h2>
+
+                                <div className="space-y-6 mb-8">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">함수명</div>
+                                            <div className="font-semibold text-gray-900">{formData.name}</div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">핸들러</div>
+                                            <div className="font-semibold text-gray-900">{formData.handler}</div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">언어 / 런타임</div>
+                                            <div className="font-semibold text-gray-900">
+                                                {languages.find(l => l.id === formData.language)?.name} {languages.find(l => l.id === formData.language)?.version}
+                                            </div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">Warm Pool</div>
+                                            <div className="font-semibold text-gray-900">
+                                                {formData.warmPoolEnabled ? '✅ 활성화' : '❌ 비활성화'}
+                                            </div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">메모리</div>
+                                            <div className="font-semibold text-gray-900">{formData.memory} MB</div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                                            <div className="text-sm text-gray-600 mb-1">타임아웃</div>
+                                            <div className="font-semibold text-gray-900">{formData.timeout}초</div>
+                                        </div>
+                                    </div>
+
+                                    {formData.envVars.length > 0 && (
+                                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                                            <div className="text-sm font-semibold text-gray-700 mb-3">환경 변수 ({formData.envVars.length}개)</div>
+                                            <div className="space-y-2">
+                                                {formData.envVars.map((envVar, index) => (
+                                                    <div key={index} className="flex items-center gap-3 text-sm">
+                                                        <span className="font-mono text-blue-900">{envVar.key}</span>
+                                                        <span className="text-gray-400">=</span>
+                                                        <span className="font-mono text-gray-600">****************</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4">
+                                        <div className="flex items-start gap-3">
+                                            <i className="ri-lightbulb-line text-purple-600 text-xl flex-shrink-0 mt-0.5"></i>
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-purple-900 mb-1">Auto-Tuner 추천</h4>
+                                                <p className="text-sm text-purple-800 mb-2">
+                                                    첫 실행 후 최적 스펙을 자동으로 분석하여 추천해드립니다.
+                                                </p>
+                                                <div className="text-sm text-purple-700">
+                                                    예상 비용 절감: <strong>최대 85%</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between gap-3">
+                                    <button
+                                        onClick={() => setCurrentStep(2)}
+                                        className="px-6 py-3 bg-white border border-purple-200 text-gray-700 font-semibold rounded-xl hover:bg-purple-50 transition-all whitespace-nowrap cursor-pointer"
+                                    >
+                                        이전 단계
+                                    </button>
+                                    <button
+                                        onClick={handleDeploy}
+                                        className="px-8 py-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all whitespace-nowrap cursor-pointer flex items-center gap-2"
+                                    >
+                                        <i className="ri-rocket-line"></i>
+                                        배포 시작
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
