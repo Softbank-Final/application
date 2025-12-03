@@ -76,6 +76,35 @@ export default function DeployPage() {
 
     const isHandlerDisabled = formData.language === 'cpp' || formData.language === 'go';
 
+    const handleFileUpload = () => fileInputRef.current?.click();
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        if (file.size > 1024 * 1024) {
+            alert('파일 크기가 너무 큽니다. 1MB 이하의 파일만 업로드 가능합니다.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target?.result as string;
+            setFormData({ ...formData, code: content });
+        };
+        reader.readAsText(file);
+    };
+
+    const handleGithubImport = () => {
+        const sampleCode = codeTemplates[formData.language];
+        setFormData({ ...formData, code: sampleCode }); // 실제 연동 대신 템플릿 로드 시늉
+        setShowGithubModal(false);
+        setGithubUrl('');
+    };
+
+    const getFileExtension = () => {
+        const extensions: Record<string, string> = { 'python': '.py', 'nodejs': '.js', 'cpp': '.cpp', 'go': '.go' };
+        return extensions[formData.language] || '.txt';
+    };
+
     return (
         <div className="flex h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
             <Sidebar />
@@ -135,8 +164,8 @@ export default function DeployPage() {
                                                     key={lang.id}
                                                     onClick={() => handleLanguageChange(lang.id)}
                                                     className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${formData.language === lang.id
-                                                            ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md'
-                                                            : 'border-purple-100 bg-white hover:border-purple-200 hover:shadow-sm'
+                                                        ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-md'
+                                                        : 'border-purple-100 bg-white hover:border-purple-200 hover:shadow-sm'
                                                         }`}
                                                 >
                                                     <i className={`${lang.icon} text-3xl mb-2 ${formData.language === lang.id ? 'text-purple-600' : 'text-gray-600'}`}></i>
